@@ -26,6 +26,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install poetry
         poetry install
+    - name: Initial Virtualenv
+      run: |
+        poetry shell
     - name: Run Tests
       run: |
-        poetry ./manage.py test
+        python manage.py test
