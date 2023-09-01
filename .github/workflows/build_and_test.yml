@@ -32,11 +32,7 @@ jobs:
         poetry --version
     - name: Install Dependencies
       run: |
-        ls
         poetry install
-    - name: Initial Virtualenv
-      run: |
-        poetry shell
     - name: Run Tests
       run: |
         python manage.py test
