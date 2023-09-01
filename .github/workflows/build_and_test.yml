@@ -25,7 +25,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install poetry
-        poetry run
+        poetry install
     - name: Run Tests
       run: |
-        python manage.py test
+        poetry ./manage.py test
