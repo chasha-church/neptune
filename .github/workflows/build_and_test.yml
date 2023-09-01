@@ -21,10 +21,18 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+      env:
+        DEVELOP_USER: ${{ secrets.DEVELOP_USER }}
+        DEVELOP_PASSWORD: ${{ secrets.DEVELOP_PASSWORD }}
+        DEVELOP_NAME: ${{ secrets.DEVELOP_NAME }}
+        DEVELOP_HOST: ${{ secrets.DEVELOP_HOST }}
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        poetry --version
     - name: Install Dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install poetry
+        ls
         poetry install
     - name: Initial Virtualenv
       run: |
