@@ -3,7 +3,6 @@ name = "neptune"
 version = "0.1.0"
 description = "The BE app for the ChushaChurch project."
 authors = ["Pavel Piasetski <pyasecky2012pavel@gmail.com>"]
-readme = "README.md"
 
 
 [tool.poetry.dependencies]
