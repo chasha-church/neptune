@@ -9,7 +9,7 @@ DEBUG = True
 
 ENVIRONMENT_NAME = 'Devs local'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 pymysql.install_as_MySQLdb()
 
