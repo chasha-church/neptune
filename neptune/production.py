@@ -31,3 +31,8 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+
+try:
+    from .settings import *
+except ImportError:
+    pass
