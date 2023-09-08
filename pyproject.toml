@@ -70,6 +70,16 @@ name = "jaraco.classes"
 url = "https://pypi.org/project/jaraco.classes/"
 priority = "supplemental"
 
+
+[tool.poetry.group.staging]
+optional = true
+
+[tool.poetry.group.staging.dependencies]
+gunicorn = "^21.2.0"
+dj-database-url = "^2.1.0"
+whitenoise = {extras = ["brotli"], version = "^6.5.0"}
+
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
