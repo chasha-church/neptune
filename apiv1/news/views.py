@@ -1,9 +1,13 @@
-from rest_framework import views
-from rest_framework.response import Response
+from apiv1 import generics
+from apiv1.news.serializers import NewsListSerializer
+from apiv1.pagination import DefaultPageNumberPagination
+from apiv1.queryables import Queryable
+from db import models
 
-from apiv1.news.contracts import news_content_contract
 
+class NewsList(generics.NoCacheListAPIView, Queryable):
+    serializer_class = NewsListSerializer
+    pagination_class = DefaultPageNumberPagination
 
-class NewsList(views.APIView):
-    def get(self, request, *args, **kwargs):
-        return Response(news_content_contract)
+    def get_queryset(self):
+        return self.qs(models.NewsContent).prefetch_related('assets').order_by('-updated_date').all()

@@ -5,6 +5,7 @@ from rest_framework import status
 
 class TestNewsList(WebTest):
     view_name = 'news_list'
+    customer_domain = 'default'
 
     def test_get(self):
         response = self.app.get(reverse(self.view_name,))

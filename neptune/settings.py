@@ -14,7 +14,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
     'apiv1',
+    'db',
 ]
 
 MIDDLEWARE = [
@@ -37,7 +40,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
         'TEST': {
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'NAME': BASE_DIR / 'test_db_sqlite3',
         }
     },
 
@@ -49,6 +52,34 @@ DATABASES = {
         'HOST': os.environ.get('DEVELOP_HOST'),
         'PORT': '3306',
     }
+}
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework.filters.SearchFilter',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.FileUploadParser',
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anonymous_burst': '60/min',
+        'anonymous_sustained': '1000/day'
+    },
+    'DEFAULT_PAGINATION_CLASS': 'apiv1.pagination.DefaultPageNumberPagination',
+    'PAGINATE_BY': 100,
+    'PAGINATE_BY_PARAM': 'page_size',
+    'MAX_PAGINATE_BY': 1000,
+    'SEARCH_PARAM': 'search',
+    'ORDERING_PARAM': 'ordering',
+    'EXCEPTION_HANDLER': 'apiv1.utils.default_exception_handler',
 }
 
 
@@ -67,6 +98,9 @@ TEMPLATES = [
         },
     },
 ]
+
+# Suppress boundary exception logging handled by EXCEPTION_HANDLER during automated testing
+SUPPRESS_BOUNDARY_EXCEPTION_LOGGING = False
 
 WSGI_APPLICATION = 'neptune.wsgi.application'
 
@@ -98,3 +132,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+DB_SERVER_PARAMETER_LIMIT = 2100
+
+AWS_S3_BUCKET_NAME = 'chashaby'
+AWS_S3_URL = 'https://{bucket_name}.s3.eu-central-1.amazonaws.com/{file_name}'
+
+CUSTOMER_DOMAIN = 'develop'
