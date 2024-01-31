@@ -24,6 +24,7 @@ class TestScheduleOnThisWeekList(APITestBase):
         self.assertTrue(response.json_body[0].get('holidays')[0].get('url'))
         self.assertTrue(response.json_body[0].get('people')[0].get('name'))
         self.assertTrue(response.json_body[0].get('people')[0].get('url'))
+        self.assertListEqual(['title', 'time'], list(response.json_body[6].get('events')[0].keys()))
 
     def test_get_with_week_query_param(self):
         response = self.app.get(reverse(self.view_name,), params={
