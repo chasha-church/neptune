@@ -1,7 +1,9 @@
+from django.conf import settings
 from rest_framework import generics
 from rest_framework.viewsets import ModelViewSet
 
 from apiv1 import mixins
+from tools.cors.decorators import allow_cors, cors_max_age, allow_cors_methods
 
 
 class NoCacheModelViewSet(ModelViewSet):
@@ -24,6 +26,9 @@ class NoCacheListCreateAPIView(mixins.LongListModelMixin, generics.ListCreateAPI
 
 
 class NoCacheListAPIView(mixins.LongListModelMixin, generics.ListAPIView):
+    @allow_cors(settings.CORS)
+    @allow_cors_methods(settings.CORS_METHODS)
+    @cors_max_age(settings.CORS_MAX_AGE)
     def list(self, request, *args, **kwargs):
         resp = super(NoCacheListAPIView, self).list(request, *args, **kwargs)
         resp['Cache-Control'] = 'no-cache'

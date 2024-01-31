@@ -5,7 +5,7 @@ class HTTPMethods(GET, POST):
     @staticmethod
     def build_headers(access_token):
         headers = {
-            # 'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
             'accept': 'application/json',
         }
         if access_token:
