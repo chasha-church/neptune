@@ -24,3 +24,18 @@ def token_checker(login_func):
             if exception:
                 raise exception(e)
     return decorator
+
+
+def exception_checker(func):
+    '''Decorator that handles Zoom connection executions.'''
+
+    def wrap(*args, **kwargs):
+        try:
+            result = func(*args, **kwargs)
+        except HTTPError as e:
+            raise AzbykaruCredentialsError
+        except (ConnectTimeout, ConnectionError) as e:
+            raise AzbykaruConnectionError
+        return result
+
+    return wrap

@@ -6,7 +6,7 @@ from django.conf import settings
 from django.utils import timezone
 
 from .communications.http import HTTPMethods
-from .utils import token_checker
+from .utils import token_checker, exception_checker
 from ...standard.api_client import APIClient
 
 
@@ -66,7 +66,7 @@ class AzbykaruAPIClient(BaseAPIClient):
 
         return response
 
-    @token_checker(login)
+    @exception_checker
     def get_day(self, timestamp: datetime) -> Dict:
         query_params = {'date[exact]': str(timestamp.date())}
         response_data = self.get(self.DAY_URL, headers={}, query_params=query_params)
