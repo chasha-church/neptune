@@ -142,3 +142,8 @@ AZBYKARU_API_LOGIN = os.environ.get('AZBYKARU_API_LOGIN')
 AZBYKARU_API_PASSWORD = os.environ.get('AZBYKARU_API_PASSWORD')
 AZBYKARU_API_ACCESS_TOKEN = os.environ.get('AZBYKARU_API_ACCESS_TOKEN')
 AZBYKARU_BASE_URL = 'https://azbyka.ru/days/api/'
+
+
+CORS = '*'  # Allow all
+CORS_METHODS = ['GET', 'OPTIONS']
+CORS_MAX_AGE = 86400    # One day in seconds
