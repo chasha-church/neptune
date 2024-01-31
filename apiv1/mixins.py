@@ -1,3 +1,4 @@
+import json
 import operator
 import re
 from collections import OrderedDict
@@ -8,10 +9,87 @@ from django.conf import settings
 from django.db.models import Q, QuerySet
 from django.db.models.sql import Query
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, serializers
 
 from apiv1 import responses
+from apiv1.exceptions import GenericFailureException
 from apiv1.utils import status_response, is_csv_request
+
+
+class RequestArgMixin:
+    arg_types = (int, bool, str, list, dict)
+    map_boolean_values = {
+        'true': True, 'false': False,
+        '1': True, '0': False, '': False,
+        'y': True, 'n': False,
+        'yes': True, 'no': False
+     }
+
+    def get_argument(self, arg_name, arg_type=None, data=None, required=True, many=False, default=None):
+        if data is None:
+            data = self.request.data if self.request.method in ('POST', 'PUT', 'PATCH', 'DELETE') else self.request.query_params
+
+        arg = data.get(arg_name)
+
+        if not arg and not isinstance(arg, bool):
+            if default is not None:
+                return default
+            if required:
+                raise serializers.ValidationError('Argument "%s" is required' % arg_name)
+            if many:
+                return []
+
+            return None
+
+        if many:
+            return self.parse_list(arg, arg_type, arg_name)
+
+        if arg_type:
+            arg = self.parse_argument(arg, arg_type, arg_name)
+
+        return arg
+
+    def parse_argument(self, arg, arg_type, arg_name):
+        if arg_type not in self.arg_types:
+            raise serializers.ValidationError('Argument type "%s" is not supported' % arg_type.__name__)
+
+        if isinstance(arg, str):
+            arg = getattr(self, 'parse_%s' % arg_type.__name__)(arg)
+
+        if not isinstance(arg, arg_type):
+            raise serializers.ValidationError('Argument "%s" should be a "%s" type' % (arg_name, arg_type.__name__))
+
+        return arg
+
+    def parse_list(self, arg_list, arg_type, arg_name):
+        if isinstance(arg_list, str):
+            try:
+                arg_list = json.loads(arg_list)
+            except ValueError:
+                arg_list = self.tokenize_list(arg_list)
+
+        if not isinstance(arg_list, list):
+            raise serializers.ValidationError('Argument "%s" should be a "list" type' % arg_name)
+
+        return [self.parse_argument(arg, arg_type, arg_name) for arg in arg_list]
+
+    @staticmethod
+    def tokenize_list(arg_list, separator=','):
+        return [value for value in arg_list.split(separator)]
+
+    def parse_bool(self, value):
+        lower_value = str(value).lower()
+        if lower_value not in self.map_boolean_values:
+            raise GenericFailureException(f'Invalid status value "{value}" in the import file.')
+        return self.map_boolean_values[lower_value]
+
+    @staticmethod
+    def parse_int(value):
+        return int(value) if value.isdigit() else value
+
+    @staticmethod
+    def parse_str(value):
+        return value
 
 
 class LongListModelMixin:

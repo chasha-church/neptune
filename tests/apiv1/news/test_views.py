@@ -1,11 +1,11 @@
 from django.urls import reverse
-from django_webtest import WebTest
 from rest_framework import status
 
+from tests.base import APITestBase
 
-class TestNewsList(WebTest):
+
+class TestNewsList(APITestBase):
     view_name = 'news_list'
-    customer_domain = 'default'
 
     def test_get(self):
         response = self.app.get(reverse(self.view_name,))

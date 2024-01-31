@@ -63,6 +63,7 @@ WebTest = "3.0.0"
 zipp = "3.16.2"
 django-webtest = "^1.9.10"
 pymysql = "^1.1.0"
+structlog = "^24.1.0"
 
 
 [[tool.poetry.source]]

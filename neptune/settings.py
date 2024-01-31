@@ -38,7 +38,7 @@ pymysql.install_as_MySQLdb()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'test_db.sqlite3',
         'TEST': {
             'NAME': BASE_DIR / 'test_db_sqlite3',
         }
@@ -79,7 +79,6 @@ REST_FRAMEWORK = {
     'MAX_PAGINATE_BY': 1000,
     'SEARCH_PARAM': 'search',
     'ORDERING_PARAM': 'ordering',
-    'EXCEPTION_HANDLER': 'apiv1.utils.default_exception_handler',
 }
 
 
@@ -138,3 +137,8 @@ AWS_S3_BUCKET_NAME = 'chashaby'
 AWS_S3_URL = 'https://{bucket_name}.s3.eu-central-1.amazonaws.com/{file_name}'
 
 CUSTOMER_DOMAIN = 'develop'
+
+AZBYKARU_API_LOGIN = os.environ.get('AZBYKARU_API_LOGIN')
+AZBYKARU_API_PASSWORD = os.environ.get('AZBYKARU_API_PASSWORD')
+AZBYKARU_API_ACCESS_TOKEN = os.environ.get('AZBYKARU_API_ACCESS_TOKEN')
+AZBYKARU_BASE_URL = 'https://azbyka.ru/days/api/'

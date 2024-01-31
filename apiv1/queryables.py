@@ -1,5 +1,8 @@
+from django.conf import settings
+
+
 class Queryable:
-    customer_domain = 'develop'
+    customer_domain = settings.CUSTOMER_DOMAIN
 
     def qs(self, model):
         return model.objects.using(self.customer_domain)

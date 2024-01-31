@@ -38,4 +38,4 @@ jobs:
     - name: Run Tests
       run: |
         source $(poetry env info --path)/bin/activate
-        python manage.py test
+        python3 -u runtests.py
