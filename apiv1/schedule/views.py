@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.utils import timezone
 from rest_framework import status
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
 from apiv1 import generics
@@ -12,9 +13,12 @@ from apiv1.schedule.serializers import ScheduleOnDayListSerializer
 from apiv1.schedule.services import ScheduleService
 
 
-class ScheduleOnThisWeekList(generics.NoCacheListAPIView, Queryable, RequestArgMixin):
+class ScheduleOnThisWeekList(GenericAPIView, Queryable, RequestArgMixin):
     pagination_class = DefaultPageNumberPagination
     serializer_class = ScheduleOnDayListSerializer
+
+    def get_queryset(self):
+        return None
 
     def get(self, request, *args, **kwargs):
         week = self.get_argument('week', required=False, arg_type=int)
