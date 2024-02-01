@@ -17,6 +17,9 @@ class ScheduleOnThisWeekList(GenericAPIView, Queryable, RequestArgMixin):
     pagination_class = DefaultPageNumberPagination
     serializer_class = ScheduleOnDayListSerializer
 
+    def get_queryset(self):
+        return None
+
     def get(self, request, *args, **kwargs):
         week = self.get_argument('week', required=False, arg_type=int)
         schedule_service = ScheduleService()
