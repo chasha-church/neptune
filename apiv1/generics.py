@@ -50,6 +50,9 @@ class NoCacheRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
 
 
 class NoCacheRetrieveCreateAPIView(generics.RetrieveAPIView, generics.CreateAPIView):
+    @allow_cors(settings.CORS)
+    @allow_cors_methods(settings.CORS_METHODS)
+    @cors_max_age(settings.CORS_MAX_AGE)
     def retrieve(self, request, *args, **kwargs):
         resp = super(NoCacheRetrieveCreateAPIView, self).retrieve(request, *args, **kwargs)
         resp['Cache-Control'] = 'no-cache'
@@ -57,6 +60,9 @@ class NoCacheRetrieveCreateAPIView(generics.RetrieveAPIView, generics.CreateAPIV
 
 
 class NoCacheRetrieveAPIView(generics.RetrieveAPIView):
+    @allow_cors(settings.CORS)
+    @allow_cors_methods(settings.CORS_METHODS)
+    @cors_max_age(settings.CORS_MAX_AGE)
     def retrieve(self, request, *args, **kwargs):
         resp = super(NoCacheRetrieveAPIView, self).retrieve(request, *args, **kwargs)
         resp['Cache-Control'] = 'no-cache'
