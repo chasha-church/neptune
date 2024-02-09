@@ -17,7 +17,7 @@ class NewsContent(models.Model):
     news_content_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     text = models.TextField()
-    view_data = models.JSONField()
+    view_data = models.JSONField(null=True)
 
     main_asset = models.ForeignKey('Assets', on_delete=models.DO_NOTHING, related_name='news_with_mian_asset', null=True)
     assets = models.ManyToManyField('Assets', through="NewsContentAssets", related_name='news_with_asset')

@@ -125,7 +125,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 STATIC_URL = 'static/'
 
@@ -147,3 +147,5 @@ AZBYKARU_BASE_URL = 'https://azbyka.ru/days/api/'
 CORS = '*'  # Allow all
 CORS_METHODS = ['GET', 'OPTIONS']
 CORS_MAX_AGE = 86400    # One day in seconds
+
+TEST_CUSTOMER_DOMAIN = 'default'
