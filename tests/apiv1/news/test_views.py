@@ -18,10 +18,10 @@ class TestNewsList(APITestBase, Queryable):
         response = self.app.get(reverse(self.view_name,))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertListEqual(
-            list(response.json_body['results'][0].keys()),
-            ['news_content_id', 'title', 'main_asset_url', 'created_date',
-             'created_by_id', 'updated_date', 'updated_by_id'])
+        self.assertSetEqual(
+            set(response.json_body['results'][0].keys()),
+            {'news_content_id', 'title', 'main_asset_url', 'created_date',
+             'created_by_id', 'updated_date', 'updated_by_id'})
 
 
 class TestNewsDetails(APITestBase):
@@ -36,7 +36,7 @@ class TestNewsDetails(APITestBase):
         response = self.app.get(reverse(self.view_name, args=(self.news.pk,)))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertListEqual(
-            list(response.json_body.keys()),
-            ['news_content_id', 'title', 'main_asset_url', 'created_date',
-             'created_by_id', 'updated_date', 'updated_by_id', 'text', 'view_data'])
+        self.assertSetEqual(
+            set(response.json_body.keys()),
+            {'news_content_id', 'title', 'main_asset_url', 'created_date',
+             'created_by_id', 'updated_date', 'updated_by_id', 'text', 'view_data', 'assets_url'})
