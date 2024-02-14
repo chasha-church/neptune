@@ -16,3 +16,5 @@ class ScheduleOnDayListSerializer(serializers.Serializer):
     holidays = HolidayOrPeopleObjectSerializer(many=True)
     people = HolidayOrPeopleObjectSerializer(many=True)
     events = EventSerializer(many=True)
+    date = serializers.DateField()
+    day_of_week = serializers.CharField()

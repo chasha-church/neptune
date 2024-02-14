@@ -1,4 +1,4 @@
-from datetime import time, datetime
+from datetime import time, datetime, timedelta
 from typing import List, Optional, Dict
 
 from bs4 import BeautifulSoup
@@ -7,6 +7,18 @@ from tools.api.azbykaru.api import AzbykaruAPIClient
 
 
 class AzbykaruAPIClientAdapter(AzbykaruAPIClient):
+    DAY_OF_WEEK_MAP = {
+        1: 'понедельник',
+        2: 'вторник',
+        3: 'среда',
+        4: 'четверг',
+        5: 'пятница',
+        6: 'суббота',
+        7: 'воскресенье',
+    }
+    DATE_ATTRIBUTE_NAME = 'date'
+    DAY_OF_WEEK_ATTRIBUTE_NAME = 'day_of_week'
+
     def _parse_day_item(self, text: str) -> Optional[Dict]:
         if text:
             soup = BeautifulSoup(text, 'html.parser')
@@ -42,6 +54,9 @@ class AzbykaruAPIClientAdapter(AzbykaruAPIClient):
             year_weeknumber_weekday[2] = weekday
             day_timestamp = datetime.fromisocalendar(*year_weeknumber_weekday)
 
-            result_data.append(self.get_day(day_timestamp))
+            day_data = self.get_day(day_timestamp)
+            day_data[self.DATE_ATTRIBUTE_NAME] = day_timestamp.date()
+            day_data[self.DAY_OF_WEEK_ATTRIBUTE_NAME] = self.DAY_OF_WEEK_MAP[weekday]
 
+            result_data.append(day_data)
         return result_data
