@@ -1,7 +1,9 @@
 import os
+import sys
 from pathlib import Path
 
 import pymysql
+import structlog
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -18,6 +20,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'apiv1',
     'db',
+    "django_structlog",
 ]
 
 MIDDLEWARE = [
@@ -28,7 +31,88 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_structlog.middlewares.RequestMiddleware',
 ]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        "json_formatter": {
+            "()": structlog.stdlib.ProcessorFormatter,
+            "processor": structlog.processors.JSONRenderer(),
+            # https://github.com/jrobichaud/django-structlog/tree/3.0.1#standard-loggers
+            # This allows logs from the standard logger to be structured. If you add additional
+            # processors to the structlog configuration below you should probably add them here
+            # too.
+            "foreign_pre_chain": [
+                structlog.contextvars.merge_contextvars,
+                structlog.processors.TimeStamper(fmt="iso"),
+                structlog.stdlib.add_logger_name,
+                structlog.stdlib.add_log_level,
+                structlog.stdlib.PositionalArgumentsFormatter(),
+                structlog.processors.StackInfoRenderer(),
+                structlog.processors.format_exc_info,
+                structlog.processors.UnicodeDecoder(),
+            ],
+        },
+        "plain_console": {
+            "()": structlog.stdlib.ProcessorFormatter,
+            "processor": structlog.dev.ConsoleRenderer(),
+        },
+    },
+    'handlers': {
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.handlers.WatchedFileHandler",
+            "filename": "test.log",
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            "formatter": "plain_console",
+            'stream': sys.stdout,
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'apiv1': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'db': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'INFO',
+        }
+    }
+}
+
+structlog.configure(
+    processors=[
+        structlog.contextvars.merge_contextvars,
+        structlog.stdlib.filter_by_level,
+        structlog.processors.TimeStamper(fmt="iso"),
+        structlog.stdlib.add_logger_name,
+        structlog.stdlib.add_log_level,
+        structlog.stdlib.PositionalArgumentsFormatter(),
+        structlog.processors.StackInfoRenderer(),
+        structlog.processors.format_exc_info,
+        structlog.processors.UnicodeDecoder(),
+        structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
+    ],
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    cache_logger_on_first_use=True,
+)
 
 ROOT_URLCONF = 'neptune.urls'
 
