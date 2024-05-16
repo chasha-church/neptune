@@ -65,6 +65,7 @@ django-webtest = "^1.9.10"
 pymysql = "^1.1.0"
 structlog = "^24.1.0"
 factory-boy = "^3.3.0"
+django-structlog = "^8.0.0"
 
 
 [[tool.poetry.source]]
