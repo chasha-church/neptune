@@ -10,3 +10,8 @@ class AzbykaruCredentialsError(APIException):
 class AzbykaruConnectionError(APIException):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
     default_detail = 'The azbyka.ru platform is unavailable'
+
+
+class AzbykaruMaxRetriesExceededError(APIException):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    default_detail = 'The azbyka.ru platform is unavailable due to too many request retries.'

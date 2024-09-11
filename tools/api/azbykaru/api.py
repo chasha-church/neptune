@@ -1,18 +1,18 @@
 from datetime import datetime
 from typing import Dict
-from urllib.parse import urlencode, quote
 
 from django.conf import settings
-from django.utils import timezone
 
+from tools.api.azbykaru.services import SourceService
 from .communications.http import HTTPMethods
-from .utils import token_checker, exception_checker
+from .utils import token_checker
 from ...standard.api_client import APIClient
 
 
 class BaseAPIClient(APIClient):
     def __init__(self):
-        self._access_token = settings.AZBYKARU_API_ACCESS_TOKEN
+        self.source_service = SourceService()
+        self._access_token = self.source_service.get_token() or ''
         super(BaseAPIClient, self).__init__(communication=HTTPMethods,
                                             credential={"email": settings.AZBYKARU_API_LOGIN,
                                                         "password": settings.AZBYKARU_API_PASSWORD})
@@ -58,15 +58,14 @@ class AzbykaruAPIClient(BaseAPIClient):
     LOGIN_URL = 'login'
     DAY_URL = 'day'
 
-    def login(self) -> Dict:
+    def login(self):
         response = self.post(self.LOGIN_URL, headers={}, body=self.credential)
 
         if response:
             self._access_token = response.get('token')
+            self.source_service.set_token(self._access_token)
 
-        return response
-
-    @exception_checker
+    @token_checker(login)
     def get_day(self, timestamp: datetime) -> Dict:
         query_params = {'date[exact]': str(timestamp.date())}
         response_data = self.get(self.DAY_URL, headers={}, query_params=query_params)

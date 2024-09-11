@@ -1,6 +1,8 @@
+import requests
 from requests import ConnectTimeout, HTTPError
 
-from tools.api.azbykaru.exceptions import AzbykaruConnectionError, AzbykaruCredentialsError
+from tools.api.azbykaru.exceptions import AzbykaruConnectionError, AzbykaruCredentialsError, \
+    AzbykaruMaxRetriesExceededError
 
 
 def token_checker(login_func):
@@ -23,6 +25,8 @@ def token_checker(login_func):
         except (HTTPError, ConnectTimeout, ConnectionError) as e:
             if exception:
                 raise exception(e)
+        except requests.exceptions.SSLError:
+            raise AzbykaruMaxRetriesExceededError
     return decorator
 
 

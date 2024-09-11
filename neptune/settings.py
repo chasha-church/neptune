@@ -233,3 +233,6 @@ CORS_METHODS = ['GET', 'OPTIONS']
 CORS_MAX_AGE = 86400    # One day in seconds
 
 TEST_CUSTOMER_DOMAIN = 'default'
+
+AES_KEY = os.environ.get('AES_KEY', '')
+AES_IV = os.environ.get('AES_IV', '')

@@ -4,4 +4,5 @@ try:
 except ImportError:
     pass
 
+DEBUG = True
 CUSTOMER_DOMAIN = 'default'
