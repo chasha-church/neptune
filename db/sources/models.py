@@ -12,7 +12,6 @@ class Source(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
 
     class Meta:
-        # managed = False
         db_table = 'source'
 
 
@@ -20,10 +19,9 @@ class SourceAttributes(models.Model):
     source_attribute_id = models.AutoField(primary_key=True)
     source = models.ForeignKey(Source, on_delete=models.CASCADE)
     key = models.CharField(max_length=100)
-    value = models.CharField(max_length=255)
+    value = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
     class Meta:
-        # managed = False
         db_table = 'source_attributes'
